@@ -27,16 +27,30 @@ Prototype Refactor
   * destroy() // prototype method that returns: `${this.name} was removed from the game.`
 */
 
-function GameObject(atrr)
-{
-  this.createdAt = atrr.createdAt;
-  this.name = atrr.name;
-  this.dimensions = atrr.dimensions;
-}
+// function GameObject(atrr)
+// {
+//   this.createdAt = atrr.createdAt;
+//   this.name = atrr.name;
+//   this.dimensions = atrr.dimensions;
+// }
 
-GameObject.prototype.destroy = function(){
+// GameObject.prototype.destroy = function(){
+//     return `${this.name} was removed from the game.`;
+//   }
+
+class GameObject{
+    
+    constructor(Atrr){
+      this.createdAt = Atrr.createdAt;
+      this.name = Atrr.name;
+      this.dimensions = Atrr.dimensions;
+    }
+    destroy(){
     return `${this.name} was removed from the game.`;
   }
+  }
+  
+
 
 /*
   === CharacterStats ===
@@ -45,19 +59,29 @@ GameObject.prototype.destroy = function(){
   * should inherit destroy() from GameObject's prototype
 */
 
-function CharacterStats(atrr){
+// function CharacterStats(atrr){
 
-  GameObject.call(this, atrr);
+//   GameObject.call(this, atrr);
 
-  this.healthPoints = atrr.healthPoints;
+//   this.healthPoints = atrr.healthPoints;
+// }
+
+// CharacterStats.prototype = Object.create(GameObject.prototype);
+
+// CharacterStats.prototype.takeDamage = function(){
+//   return `${this.name} took damage.`;
+// }
+
+class CharacterStats extends GameObject{
+    constructor(characterStatsAtrr){
+      super(characterStatsAtrr);
+      this.healthPoints = characterStatsAtrr.healthPoints;
+    }
+    takeDamage(){
+         return `${this.name} took damage.`;
+    }
 }
-
-CharacterStats.prototype = Object.create(GameObject.prototype);
-
-CharacterStats.prototype.takeDamage = function(){
-  return `${this.name} took damage.`;
-}
-
+  
 
 /*
   === Humanoid (Having an appearance or character resembling that of a human.) ===
@@ -68,17 +92,31 @@ CharacterStats.prototype.takeDamage = function(){
   * should inherit destroy() from GameObject through CharacterStats
   * should inherit takeDamage() from CharacterStats
 */
- function Humanoid(atrr){
-   CharacterStats.call(this, atrr);
-   this.team = atrr.team;
-   this.weapons = atrr.weapons;
-   this.language = atrr.language;
- }
+//  function Humanoid(atrr){
+//    CharacterStats.call(this, atrr);
+//    this.team = atrr.team;
+//    this.weapons = atrr.weapons;
+//    this.language = atrr.language;
+//  }
 
- Humanoid.prototype = Object.create(CharacterStats.prototype);
- Humanoid.prototype.greet = function(){
-   return `${this.name} offers a greeting in ${this.language}`;
- }
+//  Humanoid.prototype = Object.create(CharacterStats.prototype);
+//  Humanoid.prototype.greet = function(){
+//    return `${this.name} offers a greeting in ${this.language}`;
+//  }
+
+ class Humanoid extends CharacterStats{
+    constructor(humanoidAttrs){
+        super(humanoidAttrs);
+        this.team = humanoidAttrs.team;
+        this.weapons = humanoidAttrs.weapons;
+        this.language = humanoidAttrs.language;
+    }
+
+    greet(){
+        return `${this.name} offers a greeting in ${this.language}`;
+      }
+    
+  }
 
  
 
@@ -92,7 +130,7 @@ CharacterStats.prototype.takeDamage = function(){
 
 
 
-/*
+
   const mage = new Humanoid({
     createdAt: new Date(),
     dimensions: {
@@ -153,4 +191,4 @@ CharacterStats.prototype.takeDamage = function(){
   console.log(archer.greet()); // Lilith offers a greeting in Elvish.
   console.log(mage.takeDamage()); // Bruce took damage.
   console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
-  */
+  
